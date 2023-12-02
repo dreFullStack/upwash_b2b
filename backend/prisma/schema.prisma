@@ -1,0 +1,258 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            Int        @id @unique @default(autoincrement())
+  email         String         @unique
+  password      String
+  refreshTokens RefreshToken[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  role          Role           @default(FLEET_MANAGER)
+  fleetManager  FleetManager?
+  admin         Admin?
+  supportRequests SupportRequest[]
+}
+
+model RefreshToken {
+  id          String   @id @unique @default(uuid())
+  hashedToken String
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      Int
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  FLEET_MANAGER
+}
+
+model Admin {
+  id        Int   @id @unique @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+}
+
+model FleetManager {
+  id          Int @id @unique @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String @unique
+  phone       String
+  invoiceInfo InvoiceInfo?
+  invoiceInfoId Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  company     Company  @relation(fields: [companyId], references: [id])
+  companyId   Int
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
+  orders      Order[]
+}
+
+model Company {
+  id            Int @id @unique @default(autoincrement())
+  name          String @unique
+  address       String
+  city          String
+  state         String
+  zip           String
+  phone         String
+  email         String
+  country       String
+  website       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  fleetManagers FleetManager[]
+  fleets        Fleet[]
+}
+
+model Vehicle {
+  id            Int    @id @unique @default(autoincrement())
+  name          String
+  licensePlate  String 
+  country       String @default("FI")
+  color         String
+  vin           String
+  make          String
+  year          Int
+  model         String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime?
+  fleet         Fleet    @relation(fields: [fleetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fleetId       Int   
+  vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vehicleTypeId Int
+  orders        Order[]      
+}
+
+model VehicleCategory{
+  id           Int @id @unique @default(autoincrement())
+  code         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  vehicleTypes VehicleType[]
+}
+
+model VehicleType {
+  id                Int @id @unique @default(autoincrement())
+  code              String @unique
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  vehicleCategory   VehicleCategory @relation(fields: [vehicleCategoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)  
+  vehicleCategoryId Int
+  vehicles          Vehicle[]
+  prices            Price[]
+}
+
+// SEDAN
+// VAN
+// SUV
+// TRACTOR
+// EXCAVATOR
+// FORKLIFT
+// TRUCK
+// TRAILER
+// MOTORCYCLE
+// BUS
+// YACHT
+// BOAT
+
+model Fleet {
+  id        Int @id @unique @default(autoincrement())
+  name      String
+  adress    String
+  city      String
+  state     String
+  zip       String
+  country   String
+  vehicles  Vehicle[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  company   Company  @relation(fields: [companyId], references: [id])
+  companyId Int
+}
+
+model ServiceCategory {
+  id        Int    @id @unique @default(autoincrement())
+  code      String @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  services  Service[]
+}
+
+model Service {
+  id                Int             @id @unique @default(autoincrement())
+  code              String          @unique  
+  name              String
+  description       String          @db.Text
+  serviceCategory   ServiceCategory @relation(fields: [serviceCategoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  serviceCategoryId Int
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  price             Price[]
+  orders            Order[]
+}
+
+model Price {
+  id        Int   @id @unique @default(autoincrement())
+  price     Float
+  currency  String @default("EUR")
+
+  duration  Int @default(60)
+
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  serviceId Int
+
+  vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vehicleTypeId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SupportRequest {
+  id        Int    @id @unique @default(autoincrement())
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model Order {
+  id       Int    @id @unique @default(autoincrement())
+  status   OrderStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  duration Float
+  price    Float
+  date     String
+  time     String
+  currency String @default("EUR")
+  vehicles Vehicle[]
+  fleetManager FleetManager @relation(fields: [fleetManagerId], references: [id])
+  fleetManagerId Int
+  service Service @relation(fields: [serviceId], references: [id])
+  serviceId Int
+  contactPersonName String
+  contactPersonPhone String
+  additionalInfo String?
+  location String
+}
+
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+} 
+
+enum DeliveryType {
+  VERKKOLASKU
+  EMAIL
+  POST
+}
+
+model InvoiceInfo {
+  id                   Int @id @unique @default(autoincrement())
+  fleetManager         FleetManager @relation(fields: [fleetManagerId], references: [id])
+  fleetManagerId       Int @unique
+  companyName          String
+  companyNumber        String
+  companyAddress       String
+  companyPostCode      String
+  contactPersonName    String
+  contactPersonNumber  String
+  deliveryType         DeliveryType @default(EMAIL)
+  // TODO: rename these columns to english?
+  verkkolaskutusosoite String?
+  operaattoritunnus    String?
+  email                String?
+  invoicingAddress     String?
+  invoicingPostCode    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

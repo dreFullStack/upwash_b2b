@@ -1,0 +1,121 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  background-color: #FFF;
+  /* background-color: #dde6ed; */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* ::-webkit-scrollbar-button {
+  width: 5px;
+  height: 0;
+  background-repeat: no-repeat;
+}
+::-webkit-scrollbar-track {
+  background-color: #282828;
+}
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  background-color: white;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #56999f;
+}
+::-webkit-resizer {
+  width: 4px;
+  height: 0;
+  background-repeat: no-repeat;
+}
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+} */
+
+/* Fonts */
+
+/* GopherDisplay */
+@font-face {
+  font-family: 'Gopher Display';
+  src: local('Gopher Display Medium'), local('Gopher-Display-Medium'),
+      url('../public/fonts/GopherDisplay-Medium.woff2') format('woff2'),
+      url('../public/fonts/GopherDisplay-Medium.woff') format('woff'),
+      url('../public/fonts/GopherDisplay-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* FKGrotesk */
+@font-face {
+  font-family: 'FKGrotesk-Regular';
+  src: url("../public/fonts/FKGrotesk-Regular.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'FKGrotesk-Bold';
+  src: url("../public/fonts/FKGrotesk-Bold.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'FKGrotesk-Italic';
+  src: url("../public/fonts/FKGrotesk-Italic.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'FKGrotesk-Medium';
+  src: url("../public/fonts/FKGrotesk-Medium.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'FKGrotesk-Monospaced';
+  src: url("../public/fonts/FKGrotesk-Monospaced.woff2") format('woff2');
+}
+
+/* EloquiaDisplay */
+@font-face {
+  font-family: 'EloquiaDisplay-ExtraBold';
+  src: url("../public/fonts/EloquiaDisplay-ExtraBold.otf") format('opentype');
+}
+
+@font-face {
+  font-family: 'EloquiaDisplay-ExtraLight';
+  src: url("../public/fonts/EloquiaText-ExtraLight.otf") format('opentype');
+}
+
+/* NeueHaasDisplay */
+@font-face {
+  font-family: 'NeueHaasDisplayBold';
+  src: url("../public/fonts/NeueHaasDisplay/NeueHaasDisplayBold.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'NeueHaasDisplayMedium';
+  src: url("../public/fonts/NeueHaasDisplay/NeueHaasDisplayMedium.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'NeueHaasDisplayThin';
+  src: url("../public/fonts/NeueHaasDisplay/NeueHaasDisplayThin.ttf") format('truetype');
+}
+
+/* Sequel Sans */
+@font-face {
+  font-family: 'SequelSans-Light';
+  src: url("../public/fonts/SequelSans/SequelSans-Light.ttf") format('truetype');
+}
+
+@font-face {
+  font-family: 'SequelSans-Medium';
+  src: url("../public/fonts/SequelSans/SequelSans-Medium.ttf") format('truetype');
+}
